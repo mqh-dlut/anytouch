@@ -27,7 +27,7 @@ def train_one_epoch(model: torch.nn.Module,
                     log_writer=None,
                     args=None):
     model.train(True)
-    metric_logger_image = misc.MetricLogger(delimiter="  ")
+    metric_logger_image = misc.MetricLogger(delimiter="  ") # MetricLogger用来记录模型学习情况
     metric_logger_image.add_meter('lr', misc.SmoothedValue(window_size=1, fmt='{value:.6f}'))
     header_image = 'Epoch (image): [{}]'.format(epoch)
 
@@ -58,7 +58,7 @@ def train_one_epoch(model: torch.nn.Module,
 
     # data_choice = torch.zeros(sum_len_image + sum_len_video)
     if args.use_video:
-        dataset_index = torch.randperm(sum_len_image + sum_len_video)
+        dataset_index = torch.randperm(sum_len_image + sum_len_video) # 生成一个打乱的数字序列
 
         min_max_values = []
         min_value = 0
@@ -83,15 +83,16 @@ def train_one_epoch(model: torch.nn.Module,
     else:
         data_choice = torch.zeros(sum_len_image).int()
 
-    iter_dataloader_image = metric_logger_image.log_every(data_loaders_image[0], print_freq, header_image)
+    iter_dataloader_image = metric_logger_image.log_every(data_loaders_image[0], print_freq, header_image) # 多模态对齐数据集
     if args.use_video:
         iter_dataloader_video = metric_logger_video.log_every(data_loaders_video[0], print_freq, header_video)
     # print(iter_dataloader_image, data_loaders_image[0], data_loaders_image[1])
     # exit(0)
 
-    iter_cross_image = iter(data_loaders_image[1])
+    iter_cross_image = iter(data_loaders_image[1]) # 跨传感器匹配数据集
     iter_cross_video = iter(data_loaders_video[1])
 
+    #* dataset_id = 0(多模态图片), 1(跨传感器图片), 2(多模态视频), 3(跨传感器视频)
     for data_iter_step, dataset_id in enumerate(data_choice):
         #print('start', time.time())
 
@@ -100,12 +101,13 @@ def train_one_epoch(model: torch.nn.Module,
         do_cross=False
 
         if data_iter_step % accum_iter == 0:
+            # 根据训练步数微调学习率
             lr_sched.adjust_learning_rate(optimizer, data_iter_step / (sum_len_image + sum_len_video) + epoch, args)
 
 
         if args.use_video:
             if dataset_id == 0:
-                touch, image, text, mask, sensors, vision_flag, text_flag = next(iter_dataloader_image)
+                touch, image, text, mask, sensors, vision_flag, text_flag = next(iter_dataloader_image) # 从数据流里抓出一些数据
                 data_type = 0
 
             elif dataset_id == len(data_loaders_image):
@@ -158,7 +160,7 @@ def train_one_epoch(model: torch.nn.Module,
 
         # print(touch.shape, image.shape, text.shape, mask.shape, sensors.shape)
 
-        if args.sensor_token_for_all:
+        if args.sensor_token_for_all: # 通用传感器token
             now_epoch_point = data_iter_step / (sum_len_image + sum_len_video) + epoch
             sensor_p = args.beta_start + (args.beta_end - args.beta_start) * (now_epoch_point / (args.epochs * 1.0))
 
@@ -182,7 +184,7 @@ def train_one_epoch(model: torch.nn.Module,
         # print(touch.shape, image.shape if image is not None else None, text.shape if text is not None else None, mask.shape if mask is not None else None, sensors.shape, dataset_id)
         #print('load gpu', time.time())
 
-        with torch.cuda.amp.autocast():
+        with torch.cuda.amp.autocast(): # 混合精度计算, 前向传播, 计算loss
             # with torch.autograd.profiler.profile() as prof:
             if do_cross:
                 matching_loss = model(touch_input = touch, sensor_type = new_sensors, data_type = data_type, positive_sample = positive, negative_sample = negative, pos_sensors=pos_sensors, neg_sensors=neg_sensors)
@@ -216,7 +218,7 @@ def train_one_epoch(model: torch.nn.Module,
 
         loss /= accum_iter
         loss_scaler(loss, optimizer, parameters=model.parameters(),
-                    update_grad=(data_iter_step + 1) % accum_iter == 0)
+                    update_grad=(data_iter_step + 1) % accum_iter == 0) # 每一步都在反向传播, 满足要求后梯度更新
         if (data_iter_step + 1) % accum_iter == 0:
             optimizer.zero_grad()
         #print('backward', time.time())
