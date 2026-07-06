@@ -11,24 +11,24 @@ from matplotlib import pyplot as plt
 import numpy as np
 import random
 
-SSVTP_dir = 'tactile_datasets/SSVTP/ssvtp_data/images_tac/'
-TAG_dir = 'tactile_datasets/TAG/dataset/'
-obreal_dir = 'tactile_datasets/objectfolder/real/tactile/'
-visgel_dir = 'tactile_datasets/visgel/images/touch/'
-yuan18_dir = 'tactile_datasets/yuan18/Data_ICRA18/Data/'
-TVL_dir = 'tactile_datasets/TVL/tvl_dataset/hct/'
-ycb_dir = 'tactile_datasets/YCB-Slide/real/'
-octopi_dir = 'tactile_datasets/octopi/processed/'
+# SSVTP_dir = 'tactile_datasets/SSVTP/ssvtp_data/images_tac/'
+# TAG_dir = 'tactile_datasets/TAG/dataset/'
+# obreal_dir = 'tactile_datasets/objectfolder/real/tactile/'
+# visgel_dir = 'tactile_datasets/visgel/images/touch/'
+# yuan18_dir = 'tactile_datasets/yuan18/Data_ICRA18/Data/'
+# TVL_dir = 'tactile_datasets/TVL/tvl_dataset/hct/'
+# ycb_dir = 'tactile_datasets/YCB-Slide/real/'
+# octopi_dir = 'tactile_datasets/octopi/processed/'
 
-TAG_file = 'tactile_datasets/TAG/label.txt'
-obreal_file = 'tactile_datasets/objectfolder/real/contact_obj.csv'
-visgel_file = 'tactile_datasets/visgel/images/contact_visgel.csv'
-yuan18_file = 'tactile_datasets/yuan18/Data_ICRA18/contact_yuan.csv'
-octopi_file = 'tactile_datasets/octopi/contact.csv'
+# TAG_file = 'tactile_datasets/TAG/label.txt'
+# obreal_file = 'tactile_datasets/objectfolder/real/contact_obj.csv'
+# visgel_file = 'tactile_datasets/visgel/images/contact_visgel.csv'
+# yuan18_file = 'tactile_datasets/yuan18/Data_ICRA18/contact_yuan.csv'
+# octopi_file = 'tactile_datasets/octopi/contact.csv'
 
-feel_dir = 'tactile_datasets/feel/'
-feel_file = 'tactile_datasets/feel/feel.csv'
-obj2_dir = 'tactile_datasets/obj2.0/'
+# feel_dir = 'tactile_datasets/feel/'
+# feel_file = 'tactile_datasets/feel/feel.csv'
+# obj2_dir = 'tactile_datasets/obj2.0/'
 
 tacquad_indoor_dir = 'tactile_datasets/tacquad/data_indoor/'
 tacquad_outdoor_dir = 'tactile_datasets/tacquad/data_outdoor/'
@@ -133,63 +133,63 @@ class PretrainDataset_cross(Dataset):
                     self.sensor_type.append(4)
         self.object_index_pairs[-1].append(len(self.datalist)-1)
 
-        with open(obreal_file,'r') as file:
-            csv_reader = csv.reader(file)
-            for row in csv_reader:
-                self.datalist.append(row[0])
-                self.sensor_type.append(2)
+        # with open(obreal_file,'r') as file:
+        #     csv_reader = csv.reader(file)
+        #     for row in csv_reader:
+        #         self.datalist.append(row[0])
+        #         self.sensor_type.append(2)
 
 
-        with open(visgel_file,'r') as file:
-            csv_reader = csv.reader(file)
-            for row in csv_reader:
-                self.datalist.append(row[0])
-                self.sensor_type.append(0)
+        # with open(visgel_file,'r') as file:
+        #     csv_reader = csv.reader(file)
+        #     for row in csv_reader:
+        #         self.datalist.append(row[0])
+        #         self.sensor_type.append(0)
 
-        with open(yuan18_file,'r') as file:
-            csv_reader = csv.reader(file)
-            for row in csv_reader:
-                self.datalist.append(row[0])
-                self.sensor_type.append(0)
+        # with open(yuan18_file,'r') as file:
+        #     csv_reader = csv.reader(file)
+        #     for row in csv_reader:
+        #         self.datalist.append(row[0])
+        #         self.sensor_type.append(0)
         
-        with open(octopi_file,'r') as file:
-            csv_reader = csv.reader(file)
-            for row in csv_reader:
-                self.datalist.append(octopi_dir+row[0])
-                self.sensor_type.append(3)
+        # with open(octopi_file,'r') as file:
+        #     csv_reader = csv.reader(file)
+        #     for row in csv_reader:
+        #         self.datalist.append(octopi_dir+row[0])
+        #         self.sensor_type.append(3)
 
-        with open(TAG_file,'r') as file:
-            for row in file:
-                image = row.split(',')[0]
-                folder = image.split('/')[0]
-                image_id = image.split('/')[1]
-                for tt in range(1):
-                    self.datalist.append(TAG_dir + folder + '/gelsight_frame/' + image_id)
-                    self.sensor_type.append(0)
+        # with open(TAG_file,'r') as file:
+        #     for row in file:
+        #         image = row.split(',')[0]
+        #         folder = image.split('/')[0]
+        #         image_id = image.split('/')[1]
+        #         for tt in range(1):
+        #             self.datalist.append(TAG_dir + folder + '/gelsight_frame/' + image_id)
+        #             self.sensor_type.append(0)
 
 
-        for item in os.listdir(SSVTP_dir):
-            self.datalist.append(SSVTP_dir+item)
-            self.sensor_type.append(1)
+        # for item in os.listdir(SSVTP_dir):
+        #     self.datalist.append(SSVTP_dir+item)
+        #     self.sensor_type.append(1)
 
-        for data_folder in ['data1/','data2/','data3/']:
-            now_data_folder = TVL_dir + data_folder
-            now_json = now_data_folder + 'contact.json'
+        # for data_folder in ['data1/','data2/','data3/']:
+        #     now_data_folder = TVL_dir + data_folder
+        #     now_json = now_data_folder + 'contact.json'
             
-            with open(now_json, 'r') as file:
-                contact_json = json.load(file)
-                for image in contact_json['tactile']:
-                    self.datalist.append(now_data_folder + image)
-                    self.sensor_type.append(1)
+        #     with open(now_json, 'r') as file:
+        #         contact_json = json.load(file)
+        #         for image in contact_json['tactile']:
+        #             self.datalist.append(now_data_folder + image)
+        #             self.sensor_type.append(1)
 
-        for folder in os.listdir(ycb_dir):
-            now_folder = ycb_dir + folder + '/'
-            if os.path.isdir(now_folder):
-                for now_data in ['dataset_0','dataset_1','dataset_2','dataset_3','dataset_4']:
-                    now_image_folder = now_folder + now_data + '/frames/'
-                    for image in os.listdir(now_image_folder):
-                        self.datalist.append(now_image_folder + image)
-                        self.sensor_type.append(1)
+        # for folder in os.listdir(ycb_dir):
+        #     now_folder = ycb_dir + folder + '/'
+        #     if os.path.isdir(now_folder):
+        #         for now_data in ['dataset_0','dataset_1','dataset_2','dataset_3','dataset_4']:
+        #             now_image_folder = now_folder + now_data + '/frames/'
+        #             for image in os.listdir(now_image_folder):
+        #                 self.datalist.append(now_image_folder + image)
+        #                 self.sensor_type.append(1)
         
         print(len(self.datalist), len(self.sensor_type), len(self.objectlist), len(self.object_index_pairs))
 
@@ -358,112 +358,112 @@ class PretrainDataset_cross_video(Dataset):
                     self.sensor_type.append(4)
         self.object_index_pairs[-1].append(len(self.datalist)-1)
 
-        with open(obreal_file,'r') as file:
-            csv_reader = csv.reader(file)
-            for row in csv_reader:
-                image_id = int(row[0].split('gelsight/')[1].split('.')[0])
-                if image_id >= 3:
-                    image_1 = str(image_id - 2) +'.png'
-                    image_2 = str(image_id - 1) +'.png'
-                    now_folder = row[0].split('gelsight/')[0] + 'gelsight/'
-                    self.datalist.append([now_folder + image_1, now_folder + image_2, row[0]])
-                    self.sensor_type.append(2)
+        # with open(obreal_file,'r') as file:
+        #     csv_reader = csv.reader(file)
+        #     for row in csv_reader:
+        #         image_id = int(row[0].split('gelsight/')[1].split('.')[0])
+        #         if image_id >= 3:
+        #             image_1 = str(image_id - 2) +'.png'
+        #             image_2 = str(image_id - 1) +'.png'
+        #             now_folder = row[0].split('gelsight/')[0] + 'gelsight/'
+        #             self.datalist.append([now_folder + image_1, now_folder + image_2, row[0]])
+        #             self.sensor_type.append(2)
 
 
-        with open(visgel_file,'r') as file:
-            csv_reader = csv.reader(file)
-            for row in csv_reader:
-                image_id = int(row[0].split('/frame')[1].split('.')[0])
-                if image_id >= 3:
-                    image_1 = 'frame' + str(image_id - 2).zfill(4) +'.jpg'
-                    image_2 = 'frame' + str(image_id - 1).zfill(4) +'.jpg'
-                    now_folder = row[0].split('/frame')[0] + '/'
-                    self.datalist.append([now_folder + image_1, now_folder + image_2, row[0]])
-                    self.sensor_type.append(0)
+        # with open(visgel_file,'r') as file:
+        #     csv_reader = csv.reader(file)
+        #     for row in csv_reader:
+        #         image_id = int(row[0].split('/frame')[1].split('.')[0])
+        #         if image_id >= 3:
+        #             image_1 = 'frame' + str(image_id - 2).zfill(4) +'.jpg'
+        #             image_2 = 'frame' + str(image_id - 1).zfill(4) +'.jpg'
+        #             now_folder = row[0].split('/frame')[0] + '/'
+        #             self.datalist.append([now_folder + image_1, now_folder + image_2, row[0]])
+        #             self.sensor_type.append(0)
 
-        with open(yuan18_file,'r') as file:
-            csv_reader = csv.reader(file)
-            for row in csv_reader:
-                image_id = int(row[0].split('gelsight_frame/')[1].split('.')[0])
-                if image_id >= 3:
-                    image_1 = str(image_id - 2).zfill(4) +'.png'
-                    image_2 = str(image_id - 1).zfill(4) +'.png'
-                    now_folder = row[0].split('gelsight_frame/')[0] + 'gelsight_frame/'
-                    self.datalist.append([now_folder + image_1, now_folder + image_2, row[0]])
-                    self.sensor_type.append(0)
+        # with open(yuan18_file,'r') as file:
+        #     csv_reader = csv.reader(file)
+        #     for row in csv_reader:
+        #         image_id = int(row[0].split('gelsight_frame/')[1].split('.')[0])
+        #         if image_id >= 3:
+        #             image_1 = str(image_id - 2).zfill(4) +'.png'
+        #             image_2 = str(image_id - 1).zfill(4) +'.png'
+        #             now_folder = row[0].split('gelsight_frame/')[0] + 'gelsight_frame/'
+        #             self.datalist.append([now_folder + image_1, now_folder + image_2, row[0]])
+        #             self.sensor_type.append(0)
 
-        with open(TAG_file,'r') as file:
-            for row in file:
-                image = row.split(',')[0]
-                folder = image.split('/')[0]
-                image_name = image.split('/')[1]
-                now_folder = TAG_dir + folder + '/gelsight_frame/'
-                image_id = int(image_name.split('.')[0])
-                if image_id >= 3:
-                    image_1 = str(image_id - 2).zfill(10) +'.jpg'
-                    image_2 = str(image_id - 1).zfill(10) +'.jpg'
-                    for tt in range(1):
-                        self.datalist.append([now_folder + image_1, now_folder + image_2, now_folder + image_name])
-                        self.sensor_type.append(0)
+        # with open(TAG_file,'r') as file:
+        #     for row in file:
+        #         image = row.split(',')[0]
+        #         folder = image.split('/')[0]
+        #         image_name = image.split('/')[1]
+        #         now_folder = TAG_dir + folder + '/gelsight_frame/'
+        #         image_id = int(image_name.split('.')[0])
+        #         if image_id >= 3:
+        #             image_1 = str(image_id - 2).zfill(10) +'.jpg'
+        #             image_2 = str(image_id - 1).zfill(10) +'.jpg'
+        #             for tt in range(1):
+        #                 self.datalist.append([now_folder + image_1, now_folder + image_2, now_folder + image_name])
+        #                 self.sensor_type.append(0)
         
-        # TVL
-        for data_folder in ['data1/','data2/','data3/']:
-            now_data_folder = TVL_dir + data_folder
-            now_json = now_data_folder + 'contact.json'
+        # # TVL
+        # for data_folder in ['data1/','data2/','data3/']:
+        #     now_data_folder = TVL_dir + data_folder
+        #     now_json = now_data_folder + 'contact.json'
             
-            with open(now_json, 'r') as file:
-                contact_json = json.load(file)
-                for image in contact_json['tactile']:
-                    image_id = int(image.split('/')[2].split('-')[0])
-                    image_list = os.listdir(now_data_folder + image.split('/')[0]+'/tactile')
-                    image_0 = None
-                    image_1 = None
-                    image_2 = None
-                    for file in image_list:
-                        if file.startswith(str(image_id-2)):
-                            image_1 = file
-                        elif file.startswith(str(image_id-1)):
-                            image_2 = file
+        #     with open(now_json, 'r') as file:
+        #         contact_json = json.load(file)
+        #         for image in contact_json['tactile']:
+        #             image_id = int(image.split('/')[2].split('-')[0])
+        #             image_list = os.listdir(now_data_folder + image.split('/')[0]+'/tactile')
+        #             image_0 = None
+        #             image_1 = None
+        #             image_2 = None
+        #             for file in image_list:
+        #                 if file.startswith(str(image_id-2)):
+        #                     image_1 = file
+        #                 elif file.startswith(str(image_id-1)):
+        #                     image_2 = file
                         
-                        if image_1 and image_2:
-                            break
+        #                 if image_1 and image_2:
+        #                     break
 
-                    if image_1 and image_2:
-                        now_image_folder = now_data_folder + image.split('/')[0]+'/tactile/'
-                        if os.path.exists(now_image_folder + image_1) and os.path.exists(now_data_folder + image):
-                            self.datalist.append([now_image_folder + image_1, now_image_folder + image_2, now_data_folder + image])
-                            self.sensor_type.append(1)
+        #             if image_1 and image_2:
+        #                 now_image_folder = now_data_folder + image.split('/')[0]+'/tactile/'
+        #                 if os.path.exists(now_image_folder + image_1) and os.path.exists(now_data_folder + image):
+        #                     self.datalist.append([now_image_folder + image_1, now_image_folder + image_2, now_data_folder + image])
+        #                     self.sensor_type.append(1)
 
 
-        for folder in os.listdir(ycb_dir):
-            now_folder = ycb_dir + folder + '/'
-            if os.path.isdir(now_folder):
-                for now_data in ['dataset_0','dataset_1','dataset_2','dataset_3','dataset_4']:
-                    now_image_folder = now_folder + now_data + '/frames/'
-                    for image in os.listdir(now_image_folder):
-                        image_id = int(image.split('_')[1].split('.')[0])
-                        if image_id >= 9:
-                            image_1 = 'frame_' + str(image_id - 6).zfill(7) +'.jpg'
-                            image_2 = 'frame_' + str(image_id - 3).zfill(7) +'.jpg'
-                            if os.path.exists(now_image_folder + image_1) and os.path.exists(now_image_folder + image):
-                                self.datalist.append([now_image_folder + image_1, now_image_folder + image_2, now_image_folder + image])
-                                self.sensor_type.append(1)
+        # for folder in os.listdir(ycb_dir):
+        #     now_folder = ycb_dir + folder + '/'
+        #     if os.path.isdir(now_folder):
+        #         for now_data in ['dataset_0','dataset_1','dataset_2','dataset_3','dataset_4']:
+        #             now_image_folder = now_folder + now_data + '/frames/'
+        #             for image in os.listdir(now_image_folder):
+        #                 image_id = int(image.split('_')[1].split('.')[0])
+        #                 if image_id >= 9:
+        #                     image_1 = 'frame_' + str(image_id - 6).zfill(7) +'.jpg'
+        #                     image_2 = 'frame_' + str(image_id - 3).zfill(7) +'.jpg'
+        #                     if os.path.exists(now_image_folder + image_1) and os.path.exists(now_image_folder + image):
+        #                         self.datalist.append([now_image_folder + image_1, now_image_folder + image_2, now_image_folder + image])
+        #                         self.sensor_type.append(1)
         
-        with open(octopi_file,'r') as file:
-            csv_reader = csv.reader(file)
-            for row in csv_reader:
-                image = row[0]
-                folder = image.split('/')[1]
-                image_name = image.split('/')[2]
+        # with open(octopi_file,'r') as file:
+        #     csv_reader = csv.reader(file)
+        #     for row in csv_reader:
+        #         image = row[0]
+        #         folder = image.split('/')[1]
+        #         image_name = image.split('/')[2]
 
-                now_folder = octopi_dir + folder + '/'
+        #         now_folder = octopi_dir + folder + '/'
 
-                image_id = int(image_name.split('.')[0])
-                if image_id >= 3:
-                    image_1 = str(image_id - 2).zfill(10) +'.jpg'
-                    image_2 = str(image_id - 1).zfill(10) +'.jpg'
-                    self.datalist.append([now_folder + image_1, now_folder + image_2, now_folder + image_name])
-                    self.sensor_type.append(3)
+        #         image_id = int(image_name.split('.')[0])
+        #         if image_id >= 3:
+        #             image_1 = str(image_id - 2).zfill(10) +'.jpg'
+        #             image_2 = str(image_id - 1).zfill(10) +'.jpg'
+        #             self.datalist.append([now_folder + image_1, now_folder + image_2, now_folder + image_name])
+        #             self.sensor_type.append(3)
 
         print(len(self.datalist), len(self.sensor_type), len(self.objectlist), len(self.object_index_pairs))
 

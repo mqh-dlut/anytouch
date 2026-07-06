@@ -10,22 +10,22 @@ import json
 from matplotlib import pyplot as plt
 import numpy as np
 
-SSVTP_dir = 'tactile_datasets/TVL/tvl_dataset/ssvtp/'
-TAG_dir = 'tactile_datasets/TAG/dataset/'
-obreal_dir = 'tactile_datasets/objectfolder/real/tactile/'
-visgel_dir = 'tactile_datasets/visgel/images/touch/'
-yuan18_dir = 'tactile_datasets/yuan18/Data_ICRA18/Data/'
-TVL_dir = 'tactile_datasets/TVL/tvl_dataset/hct/'
-ycb_dir = 'tactile_datasets/YCB-Slide/real/'
-octopi_dir = 'tactile_datasets/octopi/'
-text_dir = 'tactile_datasets/text/'
+# SSVTP_dir = 'tactile_datasets/TVL/tvl_dataset/ssvtp/'
+# TAG_dir = 'tactile_datasets/TAG/dataset/'
+# obreal_dir = 'tactile_datasets/objectfolder/real/tactile/'
+# visgel_dir = 'tactile_datasets/visgel/images/touch/'
+# yuan18_dir = 'tactile_datasets/yuan18/Data_ICRA18/Data/'
+# TVL_dir = 'tactile_datasets/TVL/tvl_dataset/hct/'
+# ycb_dir = 'tactile_datasets/YCB-Slide/real/'
+# octopi_dir = 'tactile_datasets/octopi/'
+# text_dir = 'tactile_datasets/text/'
 
-TAG_file = 'tactile_datasets/contact_text_tag_notest.csv'
-obreal_file = 'tactile_datasets/contact_text_obj.csv'
-visgel_file = 'tactile_datasets/contact_visgel.csv'
-yuan18_file = 'tactile_datasets/contact_yuan.csv'
-octopi_file = 'tactile_datasets/contact_text_octopi.csv'
-TVL_file = 'tactile_datasets/contact_text_tvl.csv'
+# TAG_file = 'tactile_datasets/contact_text_tag_notest.csv'
+# obreal_file = 'tactile_datasets/contact_text_obj.csv'
+# visgel_file = 'tactile_datasets/contact_visgel.csv'
+# yuan18_file = 'tactile_datasets/contact_yuan.csv'
+# octopi_file = 'tactile_datasets/contact_text_octopi.csv'
+# TVL_file = 'tactile_datasets/contact_text_tvl.csv'
 
 tacquad_indoor_dir = 'tactile_datasets/tacquad/data_indoor/'
 tacquad_outdoor_dir = 'tactile_datasets/tacquad/data_outdoor/'
@@ -48,66 +48,66 @@ class PretrainDataset_integrate(Dataset):
         # gelsight mini 3
         # duragel 4
 
-        with open(obreal_file,'r') as file:
-            csv_reader = csv.reader(file)
-            for row in csv_reader:
-                self.datalist.append(obreal_dir + row[0])
-                self.visionlist.append(obreal_dir + row[1])
-                self.textlist.append(text_dir + 'obj_' + row[2] +'.pt')
-                self.sensor_type.append(2)
+        # with open(obreal_file,'r') as file:
+        #     csv_reader = csv.reader(file)
+        #     for row in csv_reader:
+        #         self.datalist.append(obreal_dir + row[0])
+        #         self.visionlist.append(obreal_dir + row[1])
+        #         self.textlist.append(text_dir + 'obj_' + row[2] +'.pt')
+        #         self.sensor_type.append(2)
 
-        with open(TAG_file,'r') as file:
-            csv_reader = csv.reader(file)
-            for row in csv_reader:
-                folder = row[0]
-                image_id = row[1]
-                test_flag = int(row[3])
+        # with open(TAG_file,'r') as file:
+        #     csv_reader = csv.reader(file)
+        #     for row in csv_reader:
+        #         folder = row[0]
+        #         image_id = row[1]
+        #         test_flag = int(row[3])
 
-                # A simple resampling method to create more text-vision-touch triplets for GelSight sensor
-                for tt in range(2):
-                    if test_flag == 1:
-                        self.textlist.append(-1)
-                    else:
-                        self.textlist.append(text_dir + 'tag_' + row[2] +'.pt')
-                    self.visionlist.append(TAG_dir + folder + '/video_frame/' + image_id)
-                    self.datalist.append(TAG_dir + folder + '/gelsight_frame/' + image_id)
-                    self.sensor_type.append(0)
+        #         # A simple resampling method to create more text-vision-touch triplets for GelSight sensor
+        #         for tt in range(2):
+        #             if test_flag == 1:
+        #                 self.textlist.append(-1)
+        #             else:
+        #                 self.textlist.append(text_dir + 'tag_' + row[2] +'.pt')
+        #             self.visionlist.append(TAG_dir + folder + '/video_frame/' + image_id)
+        #             self.datalist.append(TAG_dir + folder + '/gelsight_frame/' + image_id)
+        #             self.sensor_type.append(0)
 
-        for item in os.listdir(SSVTP_dir+'/images_tac/'):
-            image_id = item.split('_')[1]
-            tactile_path = SSVTP_dir+'/images_tac/'+item
-            image_path = SSVTP_dir+'/images_rgb/'+item.replace('tac', 'rgb')
-            self.textlist.append(text_dir + 'ssvtp_' + image_id +'.pt')
-            self.datalist.append(tactile_path)
-            self.visionlist.append(image_path)
-            self.sensor_type.append(1)
+        # for item in os.listdir(SSVTP_dir+'/images_tac/'):
+        #     image_id = item.split('_')[1]
+        #     tactile_path = SSVTP_dir+'/images_tac/'+item
+        #     image_path = SSVTP_dir+'/images_rgb/'+item.replace('tac', 'rgb')
+        #     self.textlist.append(text_dir + 'ssvtp_' + image_id +'.pt')
+        #     self.datalist.append(tactile_path)
+        #     self.visionlist.append(image_path)
+        #     self.sensor_type.append(1)
 
-        with open(TVL_file,'r') as file:
-            csv_reader = csv.reader(file)
-            for row in csv_reader:
-                image_id = row[0]
-                self.textlist.append(text_dir + 'tvl_' + row[1] +'.pt')
-                self.visionlist.append(TVL_dir + image_id.replace('tactile', 'vision'))
-                self.datalist.append(TVL_dir + image_id)
-                self.sensor_type.append(1)
+        # with open(TVL_file,'r') as file:
+        #     csv_reader = csv.reader(file)
+        #     for row in csv_reader:
+        #         image_id = row[0]
+        #         self.textlist.append(text_dir + 'tvl_' + row[1] +'.pt')
+        #         self.visionlist.append(TVL_dir + image_id.replace('tactile', 'vision'))
+        #         self.datalist.append(TVL_dir + image_id)
+        #         self.sensor_type.append(1)
 
-        with open(visgel_file,'r') as file:
-            csv_reader = csv.reader(file)
-            for row in csv_reader:
-                self.datalist.append(visgel_dir + row[0])
-                self.visionlist.append(visgel_dir.replace('touch', 'vision') + row[0])
-                self.sensor_type.append(0)
-                self.textlist.append(-1)
+        # with open(visgel_file,'r') as file:
+        #     csv_reader = csv.reader(file)
+        #     for row in csv_reader:
+        #         self.datalist.append(visgel_dir + row[0])
+        #         self.visionlist.append(visgel_dir.replace('touch', 'vision') + row[0])
+        #         self.sensor_type.append(0)
+        #         self.textlist.append(-1)
         
-        with open(octopi_file,'r') as file:
-            csv_reader = csv.reader(file)
-            for row in csv_reader:
-                # A simple resampling method to create more samples for GelSight Mini sensor
-                for tt in range(3):
-                    self.datalist.append(octopi_dir+row[0])
-                    self.textlist.append(text_dir+'octopi_'+row[1]+'.pt')
-                    self.visionlist.append(-1)
-                    self.sensor_type.append(3)
+        # with open(octopi_file,'r') as file:
+        #     csv_reader = csv.reader(file)
+        #     for row in csv_reader:
+        #         # A simple resampling method to create more samples for GelSight Mini sensor
+        #         for tt in range(3):
+        #             self.datalist.append(octopi_dir+row[0])
+        #             self.textlist.append(text_dir+'octopi_'+row[1]+'.pt')
+        #             self.visionlist.append(-1)
+        #             self.sensor_type.append(3)
 
         with open(tacquad_indoor_file,'r') as file:
             csv_reader = csv.reader(file)
@@ -239,26 +239,26 @@ class PretrainDataset_integrate(Dataset):
 
                 now_id += 1
 
-        if not args.no_mae:
-            with open(yuan18_file,'r') as file:
-                csv_reader = csv.reader(file)
-                for row in csv_reader:
-                    self.datalist.append(yuan18_dir + row[0])
-                    self.sensor_type.append(0)
-                    self.visionlist.append(-1)
-                    self.textlist.append(-1)
+        # if not args.no_mae:
+        #     with open(yuan18_file,'r') as file:
+        #         csv_reader = csv.reader(file)
+        #         for row in csv_reader:
+        #             self.datalist.append(yuan18_dir + row[0])
+        #             self.sensor_type.append(0)
+        #             self.visionlist.append(-1)
+        #             self.textlist.append(-1)
 
 
-            for folder in os.listdir(ycb_dir):
-                now_folder = ycb_dir + folder + '/'
-                if os.path.isdir(now_folder):
-                    for now_data in ['dataset_0','dataset_1','dataset_2','dataset_3','dataset_4']:
-                        now_image_folder = now_folder + now_data + '/frames/'
-                        for image in os.listdir(now_image_folder):
-                            self.datalist.append(now_image_folder + image)
-                            self.sensor_type.append(1)
-                            self.visionlist.append(-1)
-                            self.textlist.append(-1)
+        #     for folder in os.listdir(ycb_dir):
+        #         now_folder = ycb_dir + folder + '/'
+        #         if os.path.isdir(now_folder):
+        #             for now_data in ['dataset_0','dataset_1','dataset_2','dataset_3','dataset_4']:
+        #                 now_image_folder = now_folder + now_data + '/frames/'
+        #                 for image in os.listdir(now_image_folder):
+        #                     self.datalist.append(now_image_folder + image)
+        #                     self.sensor_type.append(1)
+        #                     self.visionlist.append(-1)
+        #                     self.textlist.append(-1)
         
         print(len(self.datalist), len(self.textlist), len(self.visionlist))
 
@@ -338,106 +338,106 @@ class PretrainDataset_video_integrate(Dataset):
         # gelsight mini 3
         # duragel 4
 
-        with open(obreal_file,'r') as file:
-            csv_reader = csv.reader(file)
-            for row in csv_reader:
-                #self.datalist.append(obreal_dir + row[0])
-                image_id = int(row[0].split('gelsight/')[1].split('.')[0])
-                if image_id >= 3:
-                    image_0 = str(image_id - 3) +'.png'
-                    image_1 = str(image_id - 2) +'.png'
-                    image_2 = str(image_id - 1) +'.png'
-                    now_folder = row[0].split('gelsight/')[0] + 'gelsight/'
-                    self.datalist.append([obreal_dir + now_folder + image_0, obreal_dir + now_folder + image_1, obreal_dir + now_folder + image_2, obreal_dir + row[0]])
-                    self.visionlist.append(obreal_dir + row[1])
-                    self.textlist.append(text_dir + 'obj_' + row[2] +'.pt')
-                    self.sensor_type.append(2)
+        # with open(obreal_file,'r') as file:
+        #     csv_reader = csv.reader(file)
+        #     for row in csv_reader:
+        #         #self.datalist.append(obreal_dir + row[0])
+        #         image_id = int(row[0].split('gelsight/')[1].split('.')[0])
+        #         if image_id >= 3:
+        #             image_0 = str(image_id - 3) +'.png'
+        #             image_1 = str(image_id - 2) +'.png'
+        #             image_2 = str(image_id - 1) +'.png'
+        #             now_folder = row[0].split('gelsight/')[0] + 'gelsight/'
+        #             self.datalist.append([obreal_dir + now_folder + image_0, obreal_dir + now_folder + image_1, obreal_dir + now_folder + image_2, obreal_dir + row[0]])
+        #             self.visionlist.append(obreal_dir + row[1])
+        #             self.textlist.append(text_dir + 'obj_' + row[2] +'.pt')
+        #             self.sensor_type.append(2)
 
-        with open(TAG_file,'r') as file:
-            csv_reader = csv.reader(file)
-            for row in csv_reader:
-                folder = row[0]
-                image_name = row[1]
-                image_id = int(image_name.split('.')[0])
-                test_flag = int(row[3])
-                if image_id >= 3:
-                    image_0 = str(image_id - 3).zfill(10) +'.jpg'
-                    image_1 = str(image_id - 2).zfill(10) +'.jpg'
-                    image_2 = str(image_id - 1).zfill(10) +'.jpg'
-                    # A simple resampling method to create more text-vision-touch triplets for GelSight sensor
-                    for tt in range(2):
-                        self.datalist.append([TAG_dir + folder + '/gelsight_frame/' + image_0, TAG_dir + folder + '/gelsight_frame/' + image_1, TAG_dir + folder + '/gelsight_frame/' + image_2, TAG_dir + folder + '/gelsight_frame/' + image_name])
-                        if test_flag == 1:
-                            self.textlist.append(-1)
-                        else:
-                            self.textlist.append(text_dir + 'tag_' + row[2] +'.pt')
-                        self.visionlist.append(TAG_dir + folder + '/video_frame/' + image_name)
-                        self.sensor_type.append(0)
+        # with open(TAG_file,'r') as file:
+        #     csv_reader = csv.reader(file)
+        #     for row in csv_reader:
+        #         folder = row[0]
+        #         image_name = row[1]
+        #         image_id = int(image_name.split('.')[0])
+        #         test_flag = int(row[3])
+        #         if image_id >= 3:
+        #             image_0 = str(image_id - 3).zfill(10) +'.jpg'
+        #             image_1 = str(image_id - 2).zfill(10) +'.jpg'
+        #             image_2 = str(image_id - 1).zfill(10) +'.jpg'
+        #             # A simple resampling method to create more text-vision-touch triplets for GelSight sensor
+        #             for tt in range(2):
+        #                 self.datalist.append([TAG_dir + folder + '/gelsight_frame/' + image_0, TAG_dir + folder + '/gelsight_frame/' + image_1, TAG_dir + folder + '/gelsight_frame/' + image_2, TAG_dir + folder + '/gelsight_frame/' + image_name])
+        #                 if test_flag == 1:
+        #                     self.textlist.append(-1)
+        #                 else:
+        #                     self.textlist.append(text_dir + 'tag_' + row[2] +'.pt')
+        #                 self.visionlist.append(TAG_dir + folder + '/video_frame/' + image_name)
+        #                 self.sensor_type.append(0)
 
 
-        with open(TVL_file,'r') as file:
-            csv_reader = csv.reader(file)
-            for row in csv_reader:
-                image_name = row[0]
-                image_id = int(image_name.split('/tactile/')[1].split('-')[0])
-                image_list = os.listdir(TVL_dir + image_name.split('/tactile/')[0]+'/tactile/')
-                image_0 = None
-                image_1 = None
-                image_2 = None
+        # with open(TVL_file,'r') as file:
+        #     csv_reader = csv.reader(file)
+        #     for row in csv_reader:
+        #         image_name = row[0]
+        #         image_id = int(image_name.split('/tactile/')[1].split('-')[0])
+        #         image_list = os.listdir(TVL_dir + image_name.split('/tactile/')[0]+'/tactile/')
+        #         image_0 = None
+        #         image_1 = None
+        #         image_2 = None
 
-                for file in image_list:
-                    if file.startswith(str(image_id-3)):
-                        image_0 = file
-                    elif file.startswith(str(image_id-2)):
-                        image_1 = file
-                    elif file.startswith(str(image_id-1)):
-                        image_2 = file
+        #         for file in image_list:
+        #             if file.startswith(str(image_id-3)):
+        #                 image_0 = file
+        #             elif file.startswith(str(image_id-2)):
+        #                 image_1 = file
+        #             elif file.startswith(str(image_id-1)):
+        #                 image_2 = file
                     
-                    if image_0 and image_1 and image_2:
-                        break
+        #             if image_0 and image_1 and image_2:
+        #                 break
                 
-                if image_0 and image_1 and image_2:
-                    now_image_folder = TVL_dir + image_name.split('/tactile/')[0]+'/tactile/'
-                    self.datalist.append([now_image_folder + image_0, now_image_folder + image_1, now_image_folder + image_2, TVL_dir + image_name])
-                    self.textlist.append(text_dir + 'tvl_' + row[1] +'.pt')
-                    self.visionlist.append(TVL_dir + image_name.replace('tactile', 'vision'))
-                    #self.datalist.append(TVL_dir + image_name)
-                    self.sensor_type.append(1)
+        #         if image_0 and image_1 and image_2:
+        #             now_image_folder = TVL_dir + image_name.split('/tactile/')[0]+'/tactile/'
+        #             self.datalist.append([now_image_folder + image_0, now_image_folder + image_1, now_image_folder + image_2, TVL_dir + image_name])
+        #             self.textlist.append(text_dir + 'tvl_' + row[1] +'.pt')
+        #             self.visionlist.append(TVL_dir + image_name.replace('tactile', 'vision'))
+        #             #self.datalist.append(TVL_dir + image_name)
+        #             self.sensor_type.append(1)
 
-        with open(octopi_file,'r') as file:
-            csv_reader = csv.reader(file)
-            for row in csv_reader:
-                image = row[0]
-                folder = image.split('/')[1]
-                image_name = image.split('/')[2]
+        # with open(octopi_file,'r') as file:
+        #     csv_reader = csv.reader(file)
+        #     for row in csv_reader:
+        #         image = row[0]
+        #         folder = image.split('/')[1]
+        #         image_name = image.split('/')[2]
 
-                now_folder = octopi_dir + 'processed/' + folder + '/'
+        #         now_folder = octopi_dir + 'processed/' + folder + '/'
 
-                image_id = int(image_name.split('.')[0])
-                if image_id >= 3:
-                    # A simple resampling method to create more samples for GelSight Mini sensor
-                    for tt in range(3):
-                        image_0 = str(image_id - 3).zfill(10) +'.jpg'
-                        image_1 = str(image_id - 2).zfill(10) +'.jpg'
-                        image_2 = str(image_id - 1).zfill(10) +'.jpg'
-                        self.datalist.append([now_folder + image_0, now_folder + image_1, now_folder + image_2, now_folder + image_name])
-                        self.textlist.append(text_dir+'octopi_'+row[1]+'.pt')
-                        self.visionlist.append(-1)
-                        self.sensor_type.append(3)
+        #         image_id = int(image_name.split('.')[0])
+        #         if image_id >= 3:
+        #             # A simple resampling method to create more samples for GelSight Mini sensor
+        #             for tt in range(3):
+        #                 image_0 = str(image_id - 3).zfill(10) +'.jpg'
+        #                 image_1 = str(image_id - 2).zfill(10) +'.jpg'
+        #                 image_2 = str(image_id - 1).zfill(10) +'.jpg'
+        #                 self.datalist.append([now_folder + image_0, now_folder + image_1, now_folder + image_2, now_folder + image_name])
+        #                 self.textlist.append(text_dir+'octopi_'+row[1]+'.pt')
+        #                 self.visionlist.append(-1)
+        #                 self.sensor_type.append(3)
 
-        with open(visgel_file,'r') as file:
-            csv_reader = csv.reader(file)
-            for row in csv_reader:
-                image_id = int(row[0].split('/frame')[1].split('.')[0])
-                if image_id >= 3:
-                    image_0 = 'frame' + str(image_id - 3).zfill(4) +'.jpg'
-                    image_1 = 'frame' + str(image_id - 2).zfill(4) +'.jpg'
-                    image_2 = 'frame' + str(image_id - 1).zfill(4) +'.jpg'
-                    now_folder = visgel_dir + row[0].split('/frame')[0] + '/'
-                    self.datalist.append([now_folder + image_0, now_folder + image_1, now_folder + image_2, row[0]])
-                    self.visionlist.append(visgel_dir.replace('touch', 'vision') + row[0])
-                    self.textlist.append(-1)
-                    self.sensor_type.append(0)
+        # with open(visgel_file,'r') as file:
+        #     csv_reader = csv.reader(file)
+        #     for row in csv_reader:
+        #         image_id = int(row[0].split('/frame')[1].split('.')[0])
+        #         if image_id >= 3:
+        #             image_0 = 'frame' + str(image_id - 3).zfill(4) +'.jpg'
+        #             image_1 = 'frame' + str(image_id - 2).zfill(4) +'.jpg'
+        #             image_2 = 'frame' + str(image_id - 1).zfill(4) +'.jpg'
+        #             now_folder = visgel_dir + row[0].split('/frame')[0] + '/'
+        #             self.datalist.append([now_folder + image_0, now_folder + image_1, now_folder + image_2, row[0]])
+        #             self.visionlist.append(visgel_dir.replace('touch', 'vision') + row[0])
+        #             self.textlist.append(-1)
+        #             self.sensor_type.append(0)
         
         with open(tacquad_indoor_file,'r') as file:
             csv_reader = csv.reader(file)
@@ -593,38 +593,38 @@ class PretrainDataset_video_integrate(Dataset):
 
                 now_id += 1
 
-        if not args.no_mae:
-            with open(yuan18_file,'r') as file:
-                csv_reader = csv.reader(file)
-                for row in csv_reader:
-                    image_id = int(row[0].split('gelsight_frame/')[1].split('.')[0])
-                    if image_id >= 3:
-                        self.textlist.append(-1)
-                        self.visionlist.append(-1)
-                        image_0 = str(image_id - 3).zfill(4) +'.png'
-                        image_1 = str(image_id - 2).zfill(4) +'.png'
-                        image_2 = str(image_id - 1).zfill(4) +'.png'
-                        now_folder = yuan18_dir + row[0].split('gelsight_frame/')[0] + 'gelsight_frame/'
-                        self.datalist.append([now_folder + image_0, now_folder + image_1, now_folder + image_2, row[0]])
-                        self.sensor_type.append(0)
+        # if not args.no_mae:
+        #     with open(yuan18_file,'r') as file:
+        #         csv_reader = csv.reader(file)
+        #         for row in csv_reader:
+        #             image_id = int(row[0].split('gelsight_frame/')[1].split('.')[0])
+        #             if image_id >= 3:
+        #                 self.textlist.append(-1)
+        #                 self.visionlist.append(-1)
+        #                 image_0 = str(image_id - 3).zfill(4) +'.png'
+        #                 image_1 = str(image_id - 2).zfill(4) +'.png'
+        #                 image_2 = str(image_id - 1).zfill(4) +'.png'
+        #                 now_folder = yuan18_dir + row[0].split('gelsight_frame/')[0] + 'gelsight_frame/'
+        #                 self.datalist.append([now_folder + image_0, now_folder + image_1, now_folder + image_2, row[0]])
+        #                 self.sensor_type.append(0)
 
 
-            for folder in os.listdir(ycb_dir):
-                now_folder = ycb_dir + folder + '/'
-                if os.path.isdir(now_folder):
-                    for now_data in ['dataset_0','dataset_1','dataset_2','dataset_3','dataset_4']:
-                        now_image_folder = now_folder + now_data + '/frames/'
-                        for image in os.listdir(now_image_folder):
-                            image_id = int(image.split('_')[1].split('.')[0])
-                            if image_id >= 9:
-                                image_0 = 'frame_' + str(image_id - 9).zfill(7) +'.jpg'
-                                image_1 = 'frame_' + str(image_id - 6).zfill(7) +'.jpg'
-                                image_2 = 'frame_' + str(image_id - 3).zfill(7) +'.jpg'
-                                if os.path.exists(now_image_folder + image_0) and os.path.exists(now_image_folder + image):
-                                    self.datalist.append([now_image_folder + image_0, now_image_folder + image_1, now_image_folder + image_2, now_image_folder + image])
-                                    self.textlist.append(-1)
-                                    self.visionlist.append(-1)
-                                    self.sensor_type.append(1)
+        #     for folder in os.listdir(ycb_dir):
+        #         now_folder = ycb_dir + folder + '/'
+        #         if os.path.isdir(now_folder):
+        #             for now_data in ['dataset_0','dataset_1','dataset_2','dataset_3','dataset_4']:
+        #                 now_image_folder = now_folder + now_data + '/frames/'
+        #                 for image in os.listdir(now_image_folder):
+        #                     image_id = int(image.split('_')[1].split('.')[0])
+        #                     if image_id >= 9:
+        #                         image_0 = 'frame_' + str(image_id - 9).zfill(7) +'.jpg'
+        #                         image_1 = 'frame_' + str(image_id - 6).zfill(7) +'.jpg'
+        #                         image_2 = 'frame_' + str(image_id - 3).zfill(7) +'.jpg'
+        #                         if os.path.exists(now_image_folder + image_0) and os.path.exists(now_image_folder + image):
+        #                             self.datalist.append([now_image_folder + image_0, now_image_folder + image_1, now_image_folder + image_2, now_image_folder + image])
+        #                             self.textlist.append(-1)
+        #                             self.visionlist.append(-1)
+        #                             self.sensor_type.append(1)
 
         print(len(self.datalist), len(self.textlist), len(self.visionlist))
 
