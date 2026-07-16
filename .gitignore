@@ -1,4 +1,6 @@
 
 CLIP-ViT-L-14-DataComp.XL-s13B-b90K/pytorch_model.bin
 
-__pychache__/
+__pycache__/
+.vscode/
+log/
